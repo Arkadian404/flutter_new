@@ -13,7 +13,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter App',
-      theme: ThemeData(primaryColor: Colors.purple, accentColor: Colors.amber),
+      theme: ThemeData(
+        primaryColor: Colors.purple,
+        accentColor: Colors.amber,
+      ),
       home: MyHomepage(),
     );
   }
@@ -43,14 +46,23 @@ class _MyHomepageState extends State<MyHomepage> {
     }).toList();
   }
 
-  void _addNewTransaction(String txTitle, double txAmount) {
+  void _addNewTransaction(
+      String txTitle, double txAmount, DateTime chosenDate) {
     final newTx = Transaction(
         id: DateTime.now().toString(),
         title: txTitle,
         amount: txAmount,
-        date: DateTime.now());
+        date: chosenDate);
     setState(() {
       _userTransactions.add(newTx);
+    });
+  }
+
+  void _deleteTransaction(String id) {
+    setState(() {
+      _userTransactions.removeWhere((index) {
+        return index.id == id;
+      });
     });
   }
 
@@ -83,7 +95,7 @@ class _MyHomepageState extends State<MyHomepage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Chart(_recentTransactions),
-            TransactionList(_userTransactions),
+            TransactionList(_userTransactions, _deleteTransaction),
           ],
         ),
       ),
